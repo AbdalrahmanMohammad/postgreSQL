@@ -1,7 +1,7 @@
 let inputs = document.querySelectorAll("form input:not([type='submit']),#cities");
 let operation = document.querySelector("select#menu");
 let form = document.querySelector("form");
-let table=document.querySelector("table");
+let table = document.querySelector("table");
 
 const postData = async (url = '', data = {}) => {
     // console.log(data)
@@ -51,7 +51,7 @@ async function controlInputs(selectedValue) {
             }
         });
         let citiesSelect = document.querySelector("#cities");
-        citiesSelect.innerHTML=`<option value="">All cities</option>`;
+        citiesSelect.innerHTML = `<option value="">All cities</option>`;
         result.result.forEach(item => {
             const option = document.createElement("option");
             option.textContent = item.address;
@@ -208,8 +208,14 @@ form.addEventListener('submit', async function (event) {
     console.log("***************");
     try {
         const result = await postData('/execute', { sql });
-        if(operation.value=="select")
-        showInTable(result.result)
+        if (operation.value == "select")
+            showInTable(result.result)
+        else {
+            sql = 'SELECT * FROM users ORDER BY id ASC;';
+
+            const result = await postData('/execute', { sql });
+            showInTable(result.result)
+        }
         console.log('Server response:', result);
     } catch (error) {
         console.error('Error sending SQL statement:', error);
@@ -221,29 +227,29 @@ form.addEventListener('submit', async function (event) {
 
 function showInTable(values) {
     const tbody = document.querySelector('table tbody');
-    
+
     // Clear existing rows
     tbody.innerHTML = '';
-    
+
     // Check if values is an array and has elements
     if (Array.isArray(values) && values.length > 0) {
         values.forEach(row => {
             // Create a new row
             const tr = document.createElement('tr');
-            
+
             // Create and append cells
             const idCell = document.createElement('td');
-            idCell.textContent = row.id || ''; 
+            idCell.textContent = row.id || '';
             tr.appendChild(idCell);
-            
+
             const nameCell = document.createElement('td');
-            nameCell.textContent = row.name || ''; 
+            nameCell.textContent = row.name || '';
             tr.appendChild(nameCell);
-            
+
             const addressCell = document.createElement('td');
             addressCell.textContent = row.address || '';
             tr.appendChild(addressCell);
-            
+
             // Append the row to the table body
             tbody.appendChild(tr);
         });
