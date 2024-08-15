@@ -1,77 +1,94 @@
 body {
     min-height: 100vh;
     background-color: antiquewhite;
+    padding: 0;
+    margin: 0;
+}
+
+header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+    font-weight: bold;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    margin-bottom: 20px;
 }
 
 main {
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
-.title {
-    font-size: 77px;
-    text-align: center;
-    margin-bottom: 50px;
-}
-
-.container {
+.operations {
     display: flex;
-    gap: 50px;
-    height: 50vh;
-    margin-bottom: 50px;
+    flex-direction: column;
+    align-items: center;
 }
 
-textarea {
-    width: 50%;
-    outline: none;
-    border: none;
-    font-size: 30px;
-    padding: 40px;
-    position: relative;
-}
-
-.result {
-    width: 50%;
-    background-color: white;
-    font-size: 30px;
-    padding: 23px;
-    position: relative;
-    overflow: auto;
-}
-
-.result::before {
-    content: "result";
-    position: absolute;
-    top: -40px;
-    left: 40px;
-    /* transform: translateX(-50%); */
-    font-size: 30px;
-    color: rgb(80, 76, 76);
+.operations select {
+    background-color: blue;
+    font-size: 20px;
     font-weight: bold;
+    padding: 10px;
+    border-radius: 10px;
+    width: fit-content;
+    color: white;
+    margin: 20px 0;
 }
 
-.hide-pseudo::before {
-    opacity: 0;
-}
-
-button {
+form {
+    padding: 20px 0;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    width: 100%;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: blueviolet;
-    border: 0;
-    outline: none;
-    border-radius: 30px;
-    height: 60px;
-    font-size: 40px;
-    font-weight: bold;
-    color: white;
-    padding: 45px;
-    width: 50%;
-    align-self: center;
-    cursor: pointer;
+    gap: 20px;
+}
 
-    &:hover {
-        transform: scale(1.05);
+form input {
+    padding: 4px 10px;
+    color: white;
+    font-size: 18px;
+    background-color: blue;
+    border: 0;
+    outline: 0;
+    border-radius: 3px;
+
+    &::placeholder {
+        color:     rgb(255, 255, 255,80%)        ;
     }
+}
+
+form select {
+    background-color: blue;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 4px 10px;
+    border-radius: 10px;
+    width: fit-content;
+    color: white;
+    margin: 20px 0;
+}
+
+form input[type="submit"] {
+    cursor: pointer;
+    padding: 10px;
+    font-size: 22px;
+    border-radius: 20px;
+    &:hover{
+        background-color: rgb(34, 34, 197);
+    }
+}
+
+table{
+    width: 80%;
+    text-align: center;
+}
+table thead{
+    background-color: rgb(28, 99, 161);
 }
