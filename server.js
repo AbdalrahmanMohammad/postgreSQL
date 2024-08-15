@@ -19,29 +19,6 @@ const client = new Client({
 
 client.connect();
 
-// Function to perform SELECT * FROM users
-// function getUsers(callback) {
-//   client.query("SELECT * FROM users ORDER BY id ASC ", (err, res) => {
-//     if (err) {
-//       console.error("Error executing query", err.stack);
-//       callback(err, null);
-//     } else {
-//       callback(null, res.rows);
-//     }
-//   });
-// }
-
-// // Example route to use the getUsers function
-// app.post('/users', (req, res) => {
-//   getUsers((err, users) => {
-//     if (err) {
-//       res.status(500).json({ error: "Failed to retrieve users" });
-//     } else {
-//       res.status(200).json(users);
-//     }
-//   });
-// });
-
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
