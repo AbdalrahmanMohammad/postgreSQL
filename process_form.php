@@ -13,6 +13,15 @@ try {
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     ]);
 
+    function getAllUsers($pdo)
+    {
+        $sql = "SELECT * FROM users ORDER BY id ASC";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $results;
+    }
+
     // Check if the form is submitted using POST
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Retrieve form data
@@ -31,13 +40,13 @@ try {
             $sql = "INSERT INTO users (name, address) VALUES (:name, :address);";
             $stmt = $pdo->prepare($sql);
             $stmt->execute(['name' => $name, 'address' => $address]);
-            echo "Record inserted successfully.";
-            echo $sql;
+            $results = getAllUsers($pdo);
+            echo json_encode($results);
         }
 
         if ($operation == "select") {
             $sql = "SELECT * FROM users";
-        
+
             $conditions = [];
             if ($name) {
                 $conditions[] = "name = :name";
@@ -45,14 +54,14 @@ try {
             if ($address) {
                 $conditions[] = "address = :address";
             }
-        
+
             if (count($conditions) > 0) {
                 $sql .= " WHERE " . implode(" AND ", $conditions);
             }
-        
+
             $sql .= " ORDER BY id ASC";
             $stmt = $pdo->prepare($sql);
-        
+
             // Bind parameters dynamically
             if ($name) {
                 $stmt->bindParam(':name', $name);
@@ -60,13 +69,14 @@ try {
             if ($address) {
                 $stmt->bindParam(':address', $address);
             }
-        
+
             $stmt->execute();
             $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
-            echo json_encode($results); // Use $results instead of $result
+
+            echo json_encode($results);
+            exit;
         }
-        
+
         if ($operation == "delete") {
             $sql = "DELETE FROM users";
 
@@ -99,7 +109,8 @@ try {
             }
 
             $stmt->execute();
-            echo "Record(s) deleted successfully.";
+            $results = getAllUsers($pdo);
+            echo json_encode($results);
         }
 
         if ($operation === "update") {
@@ -159,7 +170,8 @@ try {
             }
 
             $stmt->execute();
-            echo "Record updated successfully.";
+            $results = getAllUsers($pdo);
+            echo json_encode($results);
         }
     }
 } catch (PDOException $e) {

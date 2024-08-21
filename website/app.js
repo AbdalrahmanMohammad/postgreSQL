@@ -3,7 +3,7 @@ let operation = document.querySelector("select#menu");
 let form = document.querySelector("form");
 let table = document.querySelector("table");
 
-const postData = async (url = '', data = {}) => {
+const postData = async (url = '', data) => {
     // console.log(data)
     const response = await fetch(url, {
         method: 'POST', // *GET, POST, PUT, DELETE, etc.
@@ -11,7 +11,7 @@ const postData = async (url = '', data = {}) => {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data), // body data type must match "Content-Type" header        
+        body: (data), // body data type must match "Content-Type" header        
     });
 
     try {
@@ -40,7 +40,7 @@ async function controlInputs(selectedValue) {
         let result;
 
         try {
-            result = await postData('../get_cities.php', { });
+            result = await postData('../get_cities.php', {});
             console.log('Server response:', result);
         } catch (error) {
             console.error('Error sending SQL statement:', error);
@@ -103,147 +103,31 @@ function enableAndShow(element) {
 }
 
 
+// Add an event listener to the form element
 form.addEventListener('submit', async function (event) {
-    event.preventDefault(); // Prevent default form submission
+    event.preventDefault();
 
-    // console.log(`Form ${operation.value} submitted with values:`);
-    inputs.forEach(input => {
-        if (input.disabled == false && input.value != "")
-            console.log(`${input.id}: ${input.value}`);
-    });
-
-    const inputValues = {};
-
-    inputs.forEach(input => {
-        inputValues[input.id] = input.value;
-    });
-    console.log(inputValues);
-
-    const formData = new FormData(event.target);
+    // Create a FormData object from the form element
+    const formData = new FormData(form);
 
     try {
-        const result = await postData('../process_form.php', { formData });
-        // if (operation.value == "select")
-        //     showInTable(result.result)
-        // else {
-        //     sql = 'SELECT * FROM users ORDER BY id ASC;';
-
-        //     const result = await postData('/execute', { sql });
-        //     showInTable(result.result)
-        // }
-        console.log('Server response:', result);
+        const response = await fetch('../process_form.php', {
+            method: 'POST',
+            body: formData
+        });
+        if (response.ok) {
+            const result = await response.text();
+                showInTable(JSON.parse(result))
+        } else {
+            console.error('Server error:', response.statusText);
+        }
     } catch (error) {
-        console.error('Error sending SQL statement:', error);
+        console.error('Error:', error);
     }
 
-
-    // let sql = '';
-    // if (operation.value == "insert") {
-    //     sql = `INSERT INTO users (name, address) VALUES ('${inputValues.name}', '${inputValues.address}'); `;
-    //     console.log(sql);
-    // }
-    // if (operation.value == "select") {
-    //     sql = 'SELECT * FROM users ';
-    //     const conditions = [];
-
-    //     if (inputValues.name) {
-    //         conditions.push(`name = '${inputValues.name}'`);
-    //     }
-    //     if (inputValues.cities) {
-    //         conditions.push(`address = '${inputValues.cities}'`);
-    //     }
-
-    //     if (conditions.length > 0) {
-    //         sql += ' WHERE ' + conditions.join(' AND ');
-    //     }
-    //     sql += " ORDER BY id ASC;";
-    //     console.log(sql);
-    // }
-    // if (operation.value == "delete") {
-    //     sql = `delete from users`;
-
-    //     const conditions = [];
-
-    //     if (inputValues.name) {
-    //         conditions.push(`name = '${inputValues.name}'`);
-    //     }
-    //     if (inputValues.address) {
-    //         conditions.push(`address = '${inputValues.address}'`);
-    //     }
-    //     if (inputValues.id) {
-    //         conditions.push(`id = '${inputValues.id}'`);
-    //     }
-
-    //     if (conditions.length > 0) {
-    //         sql += ' WHERE ' + conditions.join(' AND ');
-    //     }
-
-    //     sql += ";";
-    //     console.log(sql);
-    // }
-    // if (operation.value === "update") {
-    //     sql = 'UPDATE users SET';
-    //     const updates = [];
-    //     const conditions = [];
-
-    //     // Check and add new values to the update statement
-    //     if (inputValues['new-name']) {
-    //         updates.push(`name = '${inputValues['new-name']}'`);
-    //     }
-    //     if (inputValues['new-address']) {
-    //         updates.push(`address = '${inputValues['new-address']}'`);
-    //     }
-
-    //     // Check and add conditions to the WHERE clause
-    //     if (inputValues['name']) {
-    //         conditions.push(`name = '${inputValues['name']}'`);
-    //     }
-    //     if (inputValues['address']) {
-    //         conditions.push(`address = '${inputValues['address']}'`);
-    //     }
-    //     if (inputValues['id']) {
-    //         conditions.push(`id = ${inputValues['id']}`);
-    //     }
-
-    //     // Ensure there's at least one update to make
-    //     if (updates.length === 0) {
-    //         console.error('No new values provided for update.');
-    //         return;
-    //     }
-
-    //     // Append updates to the SQL query
-    //     sql += ' ' + updates.join(', ');
-
-    //     // Ensure there's at least one condition for the WHERE clause
-    //     if (conditions.length > 0) {
-    //         sql += ' WHERE ' + conditions.join(' AND ');
-    //     } else {
-    //         console.error('No conditions provided for update.');
-    //         return;
-    //     }
-
-    //     sql += ";";
-    //     console.log(sql);
-    // }
-    // console.log("***************");
-    // try {
-    //     const result = await postData('/execute', { sql });
-    //     if (operation.value == "select")
-    //         showInTable(result.result)
-    //     else {
-    //         sql = 'SELECT * FROM users ORDER BY id ASC;';
-
-    //         const result = await postData('/execute', { sql });
-    //         showInTable(result.result)
-    //     }
-    //     console.log('Server response:', result);
-    // } catch (error) {
-    //     console.error('Error sending SQL statement:', error);
-    // }
-    // console.log("***************");
+    console.log(operation.value);
 
 });
-
 
 function showInTable(values) {
     const tbody = document.querySelector('table tbody');
